@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +26,26 @@ namespace AzureBackgroundApplication
 			[Blob("tagboa/youtube")] Stream writer)
 		{
 			using (HttpClient client = new HttpClient())
-			using (HttpResponseMessage response = client.GetAsync(getScreen(input)).Result)
-			using (HttpContent content = response.Content)
 			{
+				var url = getScreen(input);
+				using (HttpResponseMessage response = client.GetAsync(url).Result)
+				{
+					if (response.StatusCode == HttpStatusCode.OK)
+					{
+						using (HttpContent content = response.Content)
+						{
 
-				var messageBytes = content.ReadAsByteArrayAsync().Result;
-				writer.Write(messageBytes, 0, messageBytes.Length);
+							var messageBytes = content.ReadAsByteArrayAsync().Result;
+							writer.Write(messageBytes, 0, messageBytes.Length);
+						}
+
+					}
+					else
+					{
+						Console.WriteLine("cannot get from " + url);
+					}
+
+				}
 			}
 
 			//output = input;
