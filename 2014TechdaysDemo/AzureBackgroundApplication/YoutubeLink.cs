@@ -8,7 +8,7 @@ namespace AzureBackgroundApplication
 {
 	public class YoutubeLink
 	{
-		public string[] Link { get; set; }
+		public string[] Links { get; set; }
 		public string BlobFilename { get; set; }
 	}
 }

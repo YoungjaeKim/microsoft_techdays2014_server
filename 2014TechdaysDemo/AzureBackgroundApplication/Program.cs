@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using nQuant;
 
 namespace AzureBackgroundApplication
 {
@@ -20,46 +15,56 @@ namespace AzureBackgroundApplication
 		{
 			JobHost host = new JobHost();
 			host.RunAndBlock();
-			//ProcessQueueMessage(new YoutubeLink(), "", new MemoryStream());
 		}
 
+		/// <summary>
+		/// YouTube 동영상 주소로부터 이미지를 취득. 링크가 2개일 경우 좌우병합.
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="BlobFilename"></param>
+		/// <param name="writer"></param>
 		public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input, string BlobFilename,
 			[Blob("tagboa/{BlobFilename}", FileAccess.Write)] Stream writer)
 		{
-			string[] links = new[] { getScreen("http://www.youtube.com/watch?v=1fBFm4OD2W0"), getScreen("http://www.youtube.com/watch?v=pg1onIAwpaQ") };
-			var messageBytes = ImageToByte(mergeImages(links));
+			if (input.Links.Length == 1)
+			{
+				using (HttpClient client = new HttpClient())
+				{
+					var url = getVideoCode(input.Links[0]);
+					using (HttpResponseMessage response = client.GetAsync(url).Result)
+					{
+						if (response.IsSuccessStatusCode)
+						{
+							using (HttpContent content = response.Content)
+							{
+								var image = content.ReadAsByteArrayAsync().Result;
+								writer.Write(image, 0, image.Length);
+							}
+						}
+						else
+							Console.WriteLine("cannot get from " + url);
+					}
+				}
+			}
+			else if (input.Links.Length == 2)
+			{
+				string[] links = input.Links.Select(getVideoCode).ToArray();
+				var messageBytes = ImageToByte(mergeImages(links));
 
-			writer.Write(messageBytes, 0, messageBytes.Length);
-
-
-			//using (HttpClient client = new HttpClient())
-			//{
-			//	var url = getScreen(input.Link);
-			//	using (HttpResponseMessage response = await client.GetAsync(url))
-			//	{
-			//		if (response.IsSuccessStatusCode)
-			//		{
-			//			using (HttpContent content = response.Content)
-			//			{
-			//				var messageBytes = content.ReadAsByteArrayAsync().Result;
-			//				writer.Write(messageBytes, 0, messageBytes.Length);
-			//			}
-			//		}
-			//		else
-			//		{
-			//			Console.WriteLine("cannot get from " + url);
-			//		}
-			//	}
-			//}
-
-			//byte[] errorOutput = Encoding.UTF8.GetBytes("error");
-			//await writer.WriteAsync(errorOutput, 0, errorOutput.Length);
+				writer.Write(messageBytes, 0, messageBytes.Length);
+			}
+			else
+			{
+				byte[] errorOutput = Encoding.UTF8.GetBytes("error");
+				writer.WriteAsync(errorOutput, 0, errorOutput.Length).Wait();
+			}
 		}
-		public static byte[] ImageToByte(Image img)
-		{
-			ImageConverter converter = new ImageConverter();
-			return (byte[])converter.ConvertTo(img, typeof(byte[]));
-		}
+
+		/// <summary>
+		/// 이미지 좌우 병합
+		/// </summary>
+		/// <param name="urls"></param>
+		/// <returns></returns>
 		public static Bitmap mergeImages(string[] urls)
 		{
 			if (urls.Length != 2)
@@ -100,15 +105,14 @@ namespace AzureBackgroundApplication
 			return null;
 		}
 
-		public static Bitmap cropAtRect(Bitmap b, Rectangle r)
+
+		public static byte[] ImageToByte(Image img)
 		{
-			Bitmap nb = new Bitmap(r.Width, r.Height);
-			Graphics g = Graphics.FromImage(nb);
-			g.DrawImage(b, -r.X, -r.Y);
-			return nb;
+			ImageConverter converter = new ImageConverter();
+			return (byte[])converter.ConvertTo(img, typeof(byte[]));
 		}
 
-		protected static string getScreen(string url)
+		protected static string getVideoCode(string url)
 		{
 			var code = Regex.Match(url, "[\\?&]v=([^&#]*)");
 			Console.WriteLine("{0} is extracted from {1}.", code, url);
