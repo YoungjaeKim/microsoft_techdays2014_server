@@ -60,6 +60,11 @@ namespace AzureBackgroundApplication
 			}
 		}
 
+		public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input)
+		{
+			Console.WriteLine("애저찡 사랑해 :)");
+		}
+
 		/// <summary>
 		/// 이미지 좌우 병합
 		/// </summary>
