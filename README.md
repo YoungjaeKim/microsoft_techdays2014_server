@@ -20,7 +20,8 @@ TechDays2014 Azure WebJobs 데모 소스
    1. [Azure](http://www.azure.com) WebSites 생성
    2. Azure Storage 생성
  2. 설치
-   1. Azure WebSites에 git deployment 설정을 한 후 본 솔루션를 Push한다. [방법](http://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/)
+   1. 본 프로젝트를 받아서 컴파일해본다. 에러가 날 경우 프로젝트 우클릭 후 **nuget restore**를 한다.
+   1. Azure WebSites에 git deployment 설정을 한 후 본 솔루션를 Push한다. [설정방법](http://azure.microsoft.com/en-us/documentation/articles/web-sites-publish-source-control/)
    2. 또는, Visual Studio에서 본 프로젝트에 우클륵한 후 "Publish as Azure WebJobs..."를 선택한다.
    3. Azure WebSites > "웹작업(WebJobs)" 메뉴에 하나의 작업이 생성되었는지 확인.
  3. ConnectionString 설정
