@@ -27,7 +27,6 @@ namespace AzureBackgroundApplication
 		
 
 
-
 		/// <summary>
 		/// YouTube 동영상 주소로부터 이미지를 취득. 링크가 2개일 경우 좌우병합.
 		/// </summary>
