@@ -19,10 +19,15 @@ namespace AzureBackgroundApplication
 		}
 
 		public static void ProcessSimpleQueueMessage([QueueTrigger("webjobsqueue")] string inputText,
-			[Blob("tagboa/techdays.txt")]TextWriter writer)
+			[Blob("techdays/techdays.txt")]TextWriter writer)
 		{
 			writer.WriteLine(inputText);
 		}
+
+
+
+
+
 
 		/// <summary>
 		/// YouTube 동영상 주소로부터 이미지를 취득. 링크가 2개일 경우 좌우병합.
@@ -32,7 +37,7 @@ namespace AzureBackgroundApplication
 		/// <param name="writer"></param>
 		//public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input, 
 		//	string BlobFilename,
-		//	[Blob("tagboa/{BlobFilename}", FileAccess.Write)] Stream writer)
+		//	[Blob("techdays/{BlobFilename}", FileAccess.Write)] Stream writer)
 		//{
 		//	if (input.Links.Length == 1)
 		//	{
