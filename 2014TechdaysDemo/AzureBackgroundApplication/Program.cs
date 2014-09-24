@@ -118,15 +118,22 @@ namespace AzureBackgroundApplication
 			return null;
 		}
 
-
+		
 		public static byte[] ImageToByte(Image img)
 		{
 			ImageConverter converter = new ImageConverter();
 			return (byte[])converter.ConvertTo(img, typeof(byte[]));
 		}
 
+		/// <summary>
+		/// YouTube Thumbnail 주소 처리
+		/// <para>주의: 반드시 <![CDATA['v=']]>이 들어가는 주소여야 함.</para>
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
 		protected static string getVideoCode(string url)
 		{
+			// 참고: http://jquery-howto.blogspot.kr/2009/02/how-to-get-youtube-video-screenshot.html
 			var code = Regex.Match(url, "[\\?&]v=([^&#]*)");
 			Console.WriteLine("{0} is extracted from {1}.", code, url);
 
