@@ -7,11 +7,11 @@ TechDays2014 Azure WebJobs 데모 소스
  - 슬라이드: http://www.slideshare.net/youngjaekim58/20140923-tech-daysazurewebsites
 
 #시나리오
- 1. Youtube 동영상링크를 공유하는 게시판 서비스가 있다고 가정한다. 이 때, 링크의 썸네일을 보여주고자 한다.
+ 1. [Youtube](http://www.youtube.com) 동영상링크를 공유하는 게시판 서비스가 있다고 가정한다. 이 때, 링크의 썸네일을 보여주고자 한다.
  1. 가상의 게시판 서비스는 입력된 (1) 동영상 링크와 (2) 저장할 썸네일 이미지 파일을 Json형태로 Queue로 전송한다.
  1. Queue에 입력된 정보에 대하여
-   - Queue에 입력된 Youtube 링크가 1개인 경우, 그 영상의 썸네일 이미지를 받아서 `BlobFilename`에 지정된 이름으로 이미지 파일을 저장한다.
-   - Queue에 입력된 Youtube 링크가 2개인 경우, 두 동영상의 썸네일 이미지를 받아서 절반씩 합성한 후 `BlobFilename`에 지정된 이름으로 이미지 파일을 저장한다.
+   - Youtube 링크가 1개인 경우, 그 영상의 썸네일 이미지를 받아서 `BlobFilename`에 지정된 이름으로 이미지 파일을 저장한다.
+   - Youtube 링크가 2개인 경우, 두 동영상의 썸네일 이미지를 받아서 절반씩 합성한 후 `BlobFilename`에 지정된 이름으로 이미지 파일을 저장한다.
  1. Queue에 입력된 Youtube 링크가 없는 경우, `error`라고 적힌 텍스트파일을 생성한다.
 
 #설치 및 실행방법
