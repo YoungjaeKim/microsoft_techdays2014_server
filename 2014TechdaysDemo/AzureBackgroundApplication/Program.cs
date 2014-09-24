@@ -24,8 +24,7 @@ namespace AzureBackgroundApplication
 			writer.WriteLine(inputText);
 		}
 
-
-
+		
 
 
 
