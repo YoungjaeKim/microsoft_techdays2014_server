@@ -29,8 +29,10 @@ TechDays2014 Azure WebJobs 데모 소스
    3. `AzureWebJobsStorage`의 이름으로 2번과 동일한 값을 입력.
    4. 저장한다.
  3. 테스트
+   1. Storage에 `webjobsqueue` 이름의 Queue를 생성한 후, `{"Links":["http://www.youtube.com/watch?v=h52LpQ1FBm8"],"BlobFilename":"single.jpg"}`를 입력.
+   2. 잠시 후 Storage의 Blob 중 `techdays`라는 컨테이너에 `single.jpg`라는 이름의 파일이 생성됨. 다운받아서 해당 Youtube 링크의 썸네일이 성공적으로 생성되었는지 확인한다.
    1. Storage에 `webjobsqueue` 이름의 Queue를 생성한 후, `{"Links":["http://www.youtube.com/watch?v=h52LpQ1FBm8","http://www.youtube.com/watch?v=ZXK5a6IcjLE"],"BlobFilename":"merge.jpg"}`를 입력.
-   2. 잠시 후 Storage의 Blob 중 `techdays`라는 컨테이너에 `merge.jpg`라는 이름의 파일이 생성됨. 다운받아서 확인해본다.
+   2. 마찬가지로 잠시 후 Storage의 Blob 중 `techdays`라는 컨테이너에 `merge.jpg`라는 이름의 파일이 생성됨. 다운받아서 두 Youtube 링크의 썸네일 이미지가 반반씩 합성되어있는지 확인한다.
     
 #개발환경
  - 언어: C#
