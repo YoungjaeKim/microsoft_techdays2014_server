@@ -23,7 +23,8 @@ namespace AzureBackgroundApplication
 		/// <param name="input"></param>
 		/// <param name="BlobFilename"></param>
 		/// <param name="writer"></param>
-		public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input, string BlobFilename,
+		public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input, 
+			string BlobFilename,
 			[Blob("tagboa/{BlobFilename}", FileAccess.Write)] Stream writer)
 		{
 			if (input.Links.Length == 1)
@@ -42,7 +43,7 @@ namespace AzureBackgroundApplication
 							}
 						}
 						else
-							Console.WriteLine("cannot get from " + url);
+							Console.Out.WriteLine("cannot get from " + url);
 					}
 				}
 			}
@@ -58,11 +59,13 @@ namespace AzureBackgroundApplication
 				byte[] errorOutput = Encoding.UTF8.GetBytes("error");
 				writer.WriteAsync(errorOutput, 0, errorOutput.Length).Wait();
 			}
+			Console.Out.WriteLine("완료 :)");
+
 		}
 
-		public static void ProcessQueueMessage([QueueTrigger("webjobsqueue")] YoutubeLink input)
+		public static void WriteLog([QueueTrigger("webjobsqueue")] YoutubeLink input)
 		{
-			Console.WriteLine("애저찡 사랑해 :)");
+			Console.Out.WriteLine("애저찡 사랑해 :)");
 		}
 
 		/// <summary>
