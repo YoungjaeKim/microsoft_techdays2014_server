@@ -38,4 +38,4 @@ TechDays2014 Azure WebJobs 데모 소스
 #개발환경
  - 언어: C#
  - Visual Studio 2013 Ultimate ENG
- - Windows 8.1 KOR Professional
+ - Windows 8.1 Professional KOR
