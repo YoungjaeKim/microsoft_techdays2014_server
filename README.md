@@ -26,7 +26,7 @@ TechDays2014 Azure WebJobs 데모 소스
    3. Azure WebSites > "웹작업(WebJobs)" 메뉴에 하나의 작업이 생성되었는지 확인.
  3. ConnectionString 설정
    1. Azure Storage의 엑세스키 관리를 클릭하여 키를 복사(primary, secondary 상관없음).
-   2. Azure WebSites > Configuration > ConnectionString에서 이름 `AzureWebJobsDashboard`를 생성한 후 값 `DefaultEndpointsProtocol=https;AccountName=tagboa;AccountKey=[STORAGE_ACCESS_KEY]`형태로 키를 입력. `[STORAGE_ACCESS_KEY]`에 앞서 Storage메뉴에서 복사한 액세스키를 입력한다. 세번째 콤보박스는 `사용자 지정`으로 선택함.
+   2. Azure WebSites > Configuration > ConnectionString에서 이름 `AzureWebJobsDashboard`를 생성한 후 값 `DefaultEndpointsProtocol=https;AccountName=[STORAGE_NAME];AccountKey=[STORAGE_ACCESS_KEY]`형태로 키를 입력. `STORAGE_NAME`에 Storage이름을, `[STORAGE_ACCESS_KEY]`에 앞서 Storage메뉴에서 복사한 액세스키를 입력한다. 세번째 콤보박스는 `사용자 지정`으로 선택함.
    3. `AzureWebJobsStorage`의 이름으로 2번과 동일한 값을 입력.
    4. 저장한다.
  3. 테스트
