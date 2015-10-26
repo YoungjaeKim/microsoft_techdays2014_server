@@ -77,7 +77,7 @@ namespace AzureBackgroundApplication
 		/// </summary>
 		/// <param name="urls"></param>
 		/// <returns></returns>
-		public static Bitmap mergeImages(string[] urls)
+		public static Bitmap MergeImages(string[] urls)
 		{
 			if (urls.Length != 2)
 				throw new ArgumentException("urls requires only two array length", "urls");
@@ -101,20 +101,13 @@ namespace AzureBackgroundApplication
 		/// <returns></returns>
 		private static byte[] getBitmapStream(string url)
 		{
-			using (HttpClient client = new HttpClient())
+			using (var client = new HttpClient())
+			using (var response = client.GetAsync(url).Result)
 			{
-				using (HttpResponseMessage response = client.GetAsync(url).Result)
-				{
-					if (response.IsSuccessStatusCode)
-					{
-						using (HttpContent content = response.Content)
-						{
-							return content.ReadAsByteArrayAsync().Result;
-						}
-					}
-				}
+				if (!response.IsSuccessStatusCode) return null;
+				using (HttpContent content = response.Content)
+					return content.ReadAsByteArrayAsync().Result;
 			}
-			return null;
 		}
 
 		
