@@ -18,11 +18,11 @@ namespace AzureBackgroundApplication
 			host.RunAndBlock();
 		}
 
-		public static void ProcessSimpleQueueMessage([QueueTrigger("webjobsqueue")] string inputText,
-			[Blob("techdays/techdays.txt")]TextWriter writer)
-		{
-			writer.WriteLine(inputText);
-		}
+		//public static void ProcessSimpleQueueMessage([QueueTrigger("webjobsqueue")] string inputText,
+		//	[Blob("techdays/techdays.txt")]TextWriter writer)
+		//{
+		//	writer.WriteLine(inputText);
+		//}
 
 
 		/// <summary>
@@ -31,45 +31,45 @@ namespace AzureBackgroundApplication
 		/// <param name="input"></param>
 		/// <param name="BlobFilename"></param>
 		/// <param name="writer"></param>
-		//public static void ProcessQueueMessage(
-		//	[QueueTrigger("webjobsqueue")] YoutubeLink input,
-		//	string BlobFilename,
-		//	[Blob("techdays/{BlobFilename}", FileAccess.Write)] Stream writer)
-		//{
-		//	if (input.Links.Length == 1)
-		//	{
-		//		using (HttpClient client = new HttpClient())
-		//		{
-		//			var url = getVideoCode(input.Links[0]);
-		//			using (HttpResponseMessage response = client.GetAsync(url).Result)
-		//			{
-		//				if (response.IsSuccessStatusCode)
-		//				{
-		//					using (HttpContent content = response.Content)
-		//					{
-		//						var image = content.ReadAsByteArrayAsync().Result;
-		//						writer.Write(image, 0, image.Length);
-		//					}
-		//				}
-		//				else
-		//					Trace.WriteLine("cannot get from " + url);
-		//			}
-		//		}
-		//	}
-		//	else if (input.Links.Length == 2)
-		//	{
-		//		string[] links = input.Links.Select(getVideoCode).ToArray();
-		//		var messageBytes = ImageToByte(mergeImages(links));
+		public static void ProcessQueueMessage(
+			[QueueTrigger("webjobsqueue")] YoutubeLink input,
+			string BlobFilename,
+			[Blob("techdays/{BlobFilename}", FileAccess.Write)] Stream writer)
+		{
+			if (input.Links.Length == 1)
+			{
+				using (HttpClient client = new HttpClient())
+				{
+					var url = getVideoCode(input.Links[0]);
+					using (HttpResponseMessage response = client.GetAsync(url).Result)
+					{
+						if (response.IsSuccessStatusCode)
+						{
+							using (HttpContent content = response.Content)
+							{
+								var image = content.ReadAsByteArrayAsync().Result;
+								writer.Write(image, 0, image.Length);
+							}
+						}
+						else
+							Trace.WriteLine("cannot get from " + url);
+					}
+				}
+			}
+			else if (input.Links.Length == 2)
+			{
+				string[] links = input.Links.Select(getVideoCode).ToArray();
+				var messageBytes = ImageToByte(MergeImages(links));
 
-		//		writer.Write(messageBytes, 0, messageBytes.Length);
-		//	}
-		//	else
-		//	{
-		//		byte[] errorOutput = Encoding.UTF8.GetBytes("error");
-		//		writer.WriteAsync(errorOutput, 0, errorOutput.Length).Wait();
-		//	}
-		//	Trace.WriteLine("완료 :)");
-		//}
+				writer.Write(messageBytes, 0, messageBytes.Length);
+			}
+			else
+			{
+				byte[] errorOutput = Encoding.UTF8.GetBytes("error");
+				writer.WriteAsync(errorOutput, 0, errorOutput.Length).Wait();
+			}
+			Trace.WriteLine("완료 :)");
+		}
 
 
 		/// <summary>
@@ -88,9 +88,9 @@ namespace AzureBackgroundApplication
 			using (var ms = new MemoryStream(getBitmapStream(urls[1])))
 				b = new Bitmap(ms);
 
-			Graphics g = Graphics.FromImage(a);
-			g.DrawImage(b, new Rectangle(b.Width / 2, 0, b.Width / 2 - 1, b.Height), new Rectangle(b.Width / 2, 0, b.Width / 2 - 1, b.Height), GraphicsUnit.Pixel);
-			g.Dispose();
+			using (var g = Graphics.FromImage(a))
+				g.DrawImage(b, new Rectangle(b.Width/2, 0, b.Width/2 - 1, b.Height),
+					new Rectangle(b.Width/2, 0, b.Width/2 - 1, b.Height), GraphicsUnit.Pixel);
 			return a;
 		}
 
@@ -110,7 +110,7 @@ namespace AzureBackgroundApplication
 			}
 		}
 
-		
+
 		public static byte[] ImageToByte(Image img)
 		{
 			ImageConverter converter = new ImageConverter();
